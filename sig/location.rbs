@@ -1,0 +1,43 @@
+module RBS
+  class Location
+    attr_reader buffer: Buffer
+
+    attr_reader start_pos: Integer
+
+    attr_reader end_pos: Integer
+
+    def initialize: (buffer: Buffer, start_pos: Integer, end_pos: Integer) -> void
+
+    def inspect: () -> ::String
+
+    def name: () -> untyped
+
+    def start_line: () -> Integer
+
+    def start_column: () -> Integer
+
+    def end_line: () -> Integer
+
+    def end_column: () -> Integer
+
+    def start_loc: () -> Buffer::loc
+
+    def end_loc: () -> Buffer::loc
+
+    def source: () -> String
+
+    def to_s: () -> String
+
+    def self.to_string: (Location? location, ?default: ::String default) -> String
+
+    def ==: (untyped other) -> bool
+
+    def +: (Location other) -> Location
+
+    def self.concat: (*Location locations) -> Location
+
+    def pred?: (Location loc) -> bool
+
+    def to_json: (*untyped args) -> untyped
+  end
+end

@@ -7,10 +7,17 @@ require "open3"
 
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new]
 
-# RBS.logger.level = Logger::DEBUG
+RBS.logger.level = Logger::INFO
 
 if ENV["RUNTIME_TEST"]
   require "rbs/test"
+
+  sample_size = case size = (ENV["RUNTIME_TEST_SAMPLE_SIZE"] || "5")
+                when "ALL"
+                  nil
+                else
+                  size.to_i
+                end
 
   loader = RBS::EnvironmentLoader.new
   loader.add(path: Pathname(__dir__)+"../sig")
@@ -22,7 +29,7 @@ if ENV["RUNTIME_TEST"]
   test_classes << RBS::Buffer
   test_classes << RBS::Location
   test_classes.each do |klass|
-    tester.install!(klass, sampling: sampling)
+    tester.install!(klass, sample_size: sample_size)
   end
 end
 
