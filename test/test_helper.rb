@@ -12,7 +12,7 @@ RBS.logger.level = Logger::INFO
 if ENV["RUNTIME_TEST"]
   require "rbs/test"
 
-  sample_size = case size = (ENV["RUNTIME_TEST_SAMPLE_SIZE"] || "5")
+  sample_size = case size = (ENV["RUNTIME_TEST_SAMPLE_SIZE"] || "2")
                 when "ALL"
                   nil
                 else
@@ -21,6 +21,7 @@ if ENV["RUNTIME_TEST"]
 
   loader = RBS::EnvironmentLoader.new
   loader.add(path: Pathname(__dir__)+"../sig")
+  loader.add(library: "set")
 
   env = RBS::Environment.from_loader(loader).resolve_type_names
   tester = RBS::Test::Tester.new(env: env)
@@ -28,6 +29,23 @@ if ENV["RUNTIME_TEST"]
   test_classes = []
   test_classes << RBS::Buffer
   test_classes << RBS::Location
+  # test_classes << RBS::Namespace
+  # test_classes << RBS::TypeName
+  test_classes << RBS::Types::NoFreeVariables
+  test_classes << RBS::Types::NoSubst
+  test_classes << RBS::Types::NoTypeName
+  test_classes << RBS::Types::EmptyEachType
+  test_classes << RBS::Types::Bases::Base
+  test_classes << RBS::Types::Bases::Bool
+  test_classes << RBS::Types::Bases::Void
+  test_classes << RBS::Types::Bases::Any
+  test_classes << RBS::Types::Bases::Nil
+  test_classes << RBS::Types::Bases::Top
+  test_classes << RBS::Types::Bases::Bottom
+  test_classes << RBS::Types::Bases::Self
+  test_classes << RBS::Types::Bases::Instance
+  test_classes << RBS::Types::Bases::Class
+
   test_classes.each do |klass|
     tester.install!(klass, sample_size: sample_size)
   end
