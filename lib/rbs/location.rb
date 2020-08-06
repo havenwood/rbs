@@ -73,10 +73,6 @@ module RBS
       end
     end
 
-    def self.concat(*locations)
-      locations.inject {|l1, l2| l1 + l2 }
-    end
-
     def concat(*others)
       others.each { |other| self << other }
       self

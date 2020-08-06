@@ -354,7 +354,6 @@ module RBS
           Types::Bases::Nil.new(location: nil)
         when :LIT
           lit = node.children[0]
-          name = lit.class.name
           case lit
           when Symbol
             if lit.match?(/\A[ -~]+\z/)
@@ -365,7 +364,7 @@ module RBS
           when Integer
             Types::Literal.new(literal: lit, location: nil)
           else
-            type_name = TypeName.new(name: name, namespace: Namespace.root)
+            type_name = TypeName.new(name: lit.class.name.to_sym, namespace: Namespace.root)
             Types::ClassInstance.new(name: type_name, args: [], location: nil)
           end
         when :ZLIST, :ZARRAY
@@ -421,7 +420,7 @@ module RBS
 
         types = types.map do |t|
           if t.is_a?(Types::Literal)
-            type_name = TypeName.new(name: t.literal.class.name, namespace: Namespace.root)
+            type_name = TypeName.new(name: t.literal.class.name.to_sym, namespace: Namespace.root)
             Types::ClassInstance.new(name: type_name, args: [], location: nil)
           else
             t

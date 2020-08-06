@@ -1,0 +1,58 @@
+module RBS
+  class Namespace
+    %a{rbs:test:skip}
+    attr_reader path: Array[Symbol]
+
+    %a{rbs:test:skip}
+    def initialize: (path: Array[Symbol], absolute: bool) -> void
+
+    def self.empty: () -> Namespace
+
+    def self.root: () -> Namespace
+
+    def +: (Namespace other) -> Namespace
+
+    def append: (Symbol component) -> Namespace
+
+    def parent: () -> Namespace?
+
+    def absolute?: () -> bool
+
+    def relative?: () -> bool
+
+    def absolute!: () -> Namespace
+
+    def relative!: () -> Namespace
+
+    def empty?: () -> bool
+
+    def ==: (untyped other) -> bool
+
+    alias eql? ==
+
+    %a{rbs:test:skip}
+    def hash: () -> Integer
+
+    def split: () -> [Namespace, Symbol]
+
+    %a{rbs:test:skip}
+    def to_s: () -> String
+
+    def to_type_name: () -> TypeName
+
+    def self.parse: (String string) -> Namespace
+
+    # Iterate over Namespace for each element in ascending order.
+    #
+    # ```
+    # Namespace.parse("::A::B::C").ascend {|ns| p ns }
+    #   => ::A::B::C
+    #   => ::A::B
+    #   => ::A
+    #   => ::(root)
+    # ```
+    %a{rbs:test:skip}
+    def ascend: () { (Namespace) -> void } -> void
+              | () -> Enumerator[Namespace, void]
+  end
+end

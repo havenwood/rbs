@@ -1,0 +1,98 @@
+module RBS
+  class Substitution end
+
+  module Types
+    interface _TypeBase
+      %a{rbs:test:skip}
+      def location: () -> Location?
+
+      %a{rbs:test:skip}
+      def free_variables: (Set) -> Set
+
+      %a{rbs:test:skip}
+      def sub: (Substitution) -> t
+
+      %a{rbs:test:skip}
+      def map_type_name: () { (TypeName) -> TypeName } -> self
+
+      %a{rbs:test:skip}
+      def each_type: () { (t) -> void } -> void
+                   | () -> Enumerator[t, void]
+
+      %a{rbs:test:skip}
+      def to_json: (*untyped) -> untyped
+
+      %a{rbs:test:skip}
+      def to_s: (?Integer level) -> String
+    end
+
+    type t = Bases::Bool | Bases::Void | Bases::Any | Bases::Nil | Bases::Top | Bases::Bottom | Bases::Self | Bases::Instance | Bases::Class
+
+    module NoFreeVariables
+      %a{rbs:test:skip} def free_variables: (Set) -> Set
+    end
+
+    module NoSubst
+      %a{rbs:test:skip} def sub: (Substitution) -> self
+    end
+
+    module EmptyEachType
+      def each_type: () { (t) -> void } -> void
+                   | () -> Enumerator[t, void]
+    end
+
+    module NoTypeName
+
+      %a{rbs:test:skip} def map_type_name: () { (TypeName) -> TypeName } -> self
+    end
+
+    module Bases
+      class Base
+        include _TypeBase
+
+        %a{rbs:test:skip}
+        def initialize: (location: Location?) -> void
+
+        def ==: (untyped other) -> bool
+
+        def hash: () -> Integer
+
+        alias eql? ==
+
+        include NoFreeVariables
+        include NoSubst
+        include EmptyEachType
+        include NoTypeName
+      end
+
+      class Bool < Base
+      end
+
+      class Void < Base
+      end
+
+      class Any < Base
+      end
+
+      class Nil < Base
+      end
+
+      class Top < Base
+      end
+
+      class Bottom < Base
+      end
+
+      class Self < Base
+      end
+
+      class Instance < Base
+        %a{rbs:test:skip}
+        def sub: (Substitution sub) -> t
+      end
+
+      class Class < Base
+      end
+    end
+  end
+end
