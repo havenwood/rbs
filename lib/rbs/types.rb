@@ -1,3 +1,4 @@
+
 module RBS
   module Types
     module NoFreeVariables

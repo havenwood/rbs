@@ -1,9 +1,7 @@
 module RBS
   class Namespace
-    %a{rbs:test:skip}
     attr_reader path: Array[Symbol]
 
-    %a{rbs:test:skip}
     def initialize: (path: Array[Symbol], absolute: bool) -> void
 
     def self.empty: () -> Namespace
@@ -30,12 +28,10 @@ module RBS
 
     alias eql? ==
 
-    %a{rbs:test:skip}
     def hash: () -> Integer
 
-    def split: () -> [Namespace, Symbol]
+    def split: () -> [Namespace, Symbol]?
 
-    %a{rbs:test:skip}
     def to_s: () -> String
 
     def to_type_name: () -> TypeName
@@ -51,7 +47,6 @@ module RBS
     #   => ::A
     #   => ::(root)
     # ```
-    %a{rbs:test:skip}
     def ascend: () { (Namespace) -> void } -> void
               | () -> Enumerator[Namespace, void]
   end

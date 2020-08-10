@@ -1,3 +1,4 @@
+
 module RBS
   class TypeName
     attr_reader :namespace

@@ -63,7 +63,9 @@ module RBS
     end
 
     def split
-      [parent, path.last]
+      last = path.last or return
+      parent = self.parent or return
+      [parent, last]
     end
 
     def to_s
@@ -95,7 +97,7 @@ module RBS
 
         until current.empty?
           yield current
-          current = current.parent
+          current = _ = current.parent 
         end
 
         yield current

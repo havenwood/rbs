@@ -3,16 +3,12 @@ module RBS
 
   module Types
     interface _TypeBase
-      %a{rbs:test:skip}
       def location: () -> Location?
 
-      %a{rbs:test:skip}
-      def free_variables: (Set) -> Set
+      def free_variables: (Set[Symbol]) -> Set[Symbol]
 
-      %a{rbs:test:skip}
       def sub: (Substitution) -> t
 
-      %a{rbs:test:skip}
       def map_type_name: () { (TypeName) -> TypeName } -> self
 
       %a{rbs:test:skip}
@@ -29,7 +25,7 @@ module RBS
     type t = Bases::Bool | Bases::Void | Bases::Any | Bases::Nil | Bases::Top | Bases::Bottom | Bases::Self | Bases::Instance | Bases::Class
 
     module NoFreeVariables
-      %a{rbs:test:skip} def free_variables: (Set) -> Set
+      %a{rbs:test:skip} def free_variables: (Set[Symbol]) -> Set[Symbol]
     end
 
     module NoSubst
