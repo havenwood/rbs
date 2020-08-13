@@ -18,3 +18,4 @@ gem "goodcheck"
 # Test gems
 gem "rbs-amber", path: "test/assets/test-gem"
 
+gem "steep", path: "../steep"
