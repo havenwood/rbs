@@ -64,7 +64,7 @@ module RBS
 
     def split
       last = path.last or return
-      parent = self.parent or return
+      parent = self.parent
       [parent, last]
     end
 
@@ -79,6 +79,10 @@ module RBS
 
     def to_type_name
       parent, name = split
+
+      raise unless name
+      raise unless parent
+
       TypeName.new(name: name, namespace: parent)
     end
 
@@ -89,7 +93,6 @@ module RBS
         new(path: string.split("::").map(&:to_sym), absolute: false)
       end
     end
-
 
     def ascend
       if block_given?

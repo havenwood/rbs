@@ -43,7 +43,7 @@ module RBS
     end
 
     def source
-      @source ||= buffer.content[start_pos...end_pos]
+      @source ||= buffer.content[start_pos...end_pos] or raise
     end
 
     def to_s

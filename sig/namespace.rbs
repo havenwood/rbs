@@ -1,18 +1,55 @@
 module RBS
+  # Namespace instance represents a _prefix of module names_.
+  # 
+  #    vvvvvvvvvvvvvv  TypeName
+  #    RBS::Namespace
+  #    ^^^^^           Namespace
+  #
+  #    vvvvvvvvvv    TypeName
+  #    RBS::Types
+  #    ^^^^^         Namespace
+  #
+  #    vvvvvvvvvvvvvvvvv    TypeName
+  #    RBS::Types::Union
+  #    ^^^^^^^^^^^^         Namespace
+  #
+  # Note that `Namespace` is a RBS specific concept and there is no corresponding concept in Ruby.
+  #
+  # There are _absolute_ and _relative_ namespaces.
+  #
+  #    ::RBS::         # Absolute namespace
+  #      RBS::         # Relative namespace
+  #
+  # It also defines two special namespaces.
+  #
+  #    ::              # _Root_ namespace
+  #                    # _Empty_ namespace
+  #
   class Namespace
     attr_reader path: Array[Symbol]
 
     def initialize: (path: Array[Symbol], absolute: bool) -> void
 
+    # Returns new _empty_ namespace.
     def self.empty: () -> Namespace
 
+    # Returns new _root_ namespace.
     def self.root: () -> Namespace
 
+    # Concat two namespaces.
+    #
+    #   Foo:: + Bar::   # => Foo::Bar::
+    #   ::Foo:: + Bar:: # => ::Foo::Bar::
+    #
+    # If `other` is an absolute namespace, it returns `other`.
+    #
+    #   Foo:: + ::Bar::  # =>  ::Bar::
+    # 
     def +: (Namespace other) -> Namespace
 
     def append: (Symbol component) -> Namespace
 
-    def parent: () -> Namespace?
+    def parent: () -> Namespace
 
     def absolute?: () -> bool
 

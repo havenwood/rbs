@@ -3,7 +3,7 @@ target :lib do
   check "lib"
 
   vendor stdlib: "stdlib"
-  library "set", "pathname"
+  library "set", "pathname", "json"
 end
 
 # target :lib do

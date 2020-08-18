@@ -78,7 +78,7 @@ module RBS
           when Types::Bases::Class
             'class'
           else
-            raise "Unexpected base type: #{type.inspect}"
+            raise "Unexpected base type: #{inspect}"
           end
         end
       end
@@ -139,8 +139,6 @@ module RBS
           new(name: v, location: nil)
         when Array
           v.map {|x| new(name: x, location: nil) }
-        else
-          raise
         end
       end
 
@@ -228,7 +226,7 @@ module RBS
       end
 
       def each_type(&block)
-        if block_given?
+        if block
           args.each(&block)
         else
           enum_for :each_type
@@ -381,7 +379,7 @@ module RBS
       end
 
       def each_type(&block)
-        if block_given?
+        if block
           types.each(&block)
         else
           enum_for :each_type
@@ -446,7 +444,7 @@ module RBS
       end
 
       def each_type(&block)
-        if block_given?
+        if block
           fields.each_value(&block)
         else
           enum_for :each_type
@@ -493,11 +491,15 @@ module RBS
       end
 
       def to_s(level = 0)
-        if type.is_a?(RBS::Types::Literal) && type.literal.is_a?(Symbol)
-          "#{type.to_s(1)} ?"
-        else
-          "#{type.to_s(1)}?"
+        case t = type
+        when RBS::Types::Literal
+          case t.literal
+          when Symbol
+            return "#{type.to_s(1)} ?"
+          end
         end
+
+        "#{type.to_s(1)}?"
       end
 
       def each_type
@@ -561,7 +563,7 @@ module RBS
       end
 
       def each_type(&block)
-        if block_given?
+        if block
           types.each(&block)
         else
           enum_for :each_type
@@ -569,7 +571,7 @@ module RBS
       end
 
       def map_type(&block)
-        if block_given?
+        if block
           Union.new(types: types.map(&block), location: location)
         else
           enum_for :map_type
@@ -630,7 +632,7 @@ module RBS
       end
 
       def each_type(&block)
-        if block_given?
+        if block
           types.each(&block)
         else
           enum_for :each_type
@@ -638,7 +640,7 @@ module RBS
       end
 
       def map_type(&block)
-        if block_given?
+        if block
           Intersection.new(types: types.map(&block), location: location)
         else
           enum_for :map_type
@@ -673,8 +675,8 @@ module RBS
           self.class.hash ^ type.hash ^ name.hash
         end
 
-        def map_type
-          if block_given?
+        def map_type(&block)
+          if block
             Param.new(name: name, type: yield(type))
           else
             enum_for :map_type
@@ -773,7 +775,7 @@ module RBS
       end
 
       def map_type(&block)
-        if block_given?
+        if block
           Function.new(
             required_positionals: required_positionals.map {|param| param.map_type(&block) },
             optional_positionals: optional_positionals.map {|param| param.map_type(&block) },
@@ -811,7 +813,7 @@ module RBS
       end
 
       def each_param(&block)
-        if block_given?
+        if block
           required_positionals.each(&block)
           optional_positionals.each(&block)
           rest_positionals&.yield_self(&block)
@@ -892,7 +894,9 @@ module RBS
       end
 
       def param_to_s
+        # @type var params: Array[String]
         params = []
+
         params.push(*required_positionals.map(&:to_s))
         params.push(*optional_positionals.map {|p| "?#{p}"})
         params.push("*#{rest_positionals}") if rest_positionals
@@ -928,8 +932,9 @@ module RBS
       def drop_tail
         case
         when !trailing_positionals.empty?
+          last = trailing_positionals.last or raise
           [
-            trailing_positionals.last,
+            last,
             update(trailing_positionals: trailing_positionals.take(trailing_positionals.size - 1))
           ]
         else
@@ -961,7 +966,7 @@ module RBS
         self.class.hash ^ type.hash
       end
 
-      def free_variables(set)
+      def free_variables(set = Set[])
         type.free_variables(set)
       end
 
@@ -978,7 +983,7 @@ module RBS
       end
 
       def each_type(&block)
-        if block_given?
+        if block
           type.each_type(&block)
         else
           enum_for :each_type
